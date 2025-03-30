@@ -1,0 +1,6 @@
+# Ignore data files because the size exceeds the Github limit
+./data/*
+# Ignore all results files for size
+./results/*
+# Ignore the list of packages used
+reformatted_pkgs_w_versions.txt

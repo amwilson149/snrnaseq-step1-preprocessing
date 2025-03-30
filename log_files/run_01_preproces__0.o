@@ -1,0 +1,425 @@
+Sender: LSF System <lsfadmin@lc06e29>
+Subject: Job 176635468: </sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data/log_files/run_01_preproces__0> in cluster <chimera> Done
+
+Job </sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data/log_files/run_01_preproces__0> was submitted from host <li04e01> by user <wilsoa28> in cluster <chimera> at Sun Mar 30 12:56:39 2025
+Job was executed on host(s) <10*lc06e29>, in queue <premium>, as user <wilsoa28> in cluster <chimera> at Sun Mar 30 12:56:40 2025
+</hpc/users/wilsoa28> was used as the home directory.
+</sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data> was used as the working directory.
+Started at Sun Mar 30 12:56:40 2025
+Terminated at Sun Mar 30 12:59:19 2025
+Results reported at Sun Mar 30 12:59:19 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -P acc_motor # project name
+#BSUB -q premium # queue name ('premium' is standard on Minerva)
+#BSUB -n 10 # number of tasks in a parallel job (also submits as a parallel job)
+#BSUB -R span[hosts=1] # resource requirements
+#BSUB -R rusage[mem=24000] # resource requirements
+#BSUB -W 60:00 # job runtime limit (HH:MM)
+#BSUB -J /sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data/log_files/run_01_preproces__0
+#BSUB -o /sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data/log_files/run_01_preproces__0.o
+#BSUB -e /sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data/log_files/run_01_preproces__0.e
+#BSUB -L /bin/bash
+
+set -ev
+
+# 01. Set up environment
+# 01a. Activate conda environment
+ml anaconda3/2020.11
+ml -python
+source /hpc/packages/minerva-centos7/anaconda3/2020.11/etc/profile.d/conda.sh
+conda activate cellbender-w-scrublet-env
+# 01b. Get root directory
+exec_dir=$( pwd )
+cd "${exec_dir}"
+prpr_dir="${exec_dir}/scripts"
+
+# 02. Set up config files
+# 02a. Specify config file path
+cfg="${exec_dir}/configs/config_data_build.yaml"
+echo "${cfg}"
+# 02b. Add root directory to config
+# file if it does not exist in there
+# yet (meaning the script hasn't been
+# run before)
+if ! $( grep -q 'root_dir' ${cfg} ); then
+	echo "Initializing config file with current directory as root directory"
+	echo "root_dir: '${exec_dir}'" >> ${cfg}
+else
+	echo "Config file already contains root directory; proceeding"
+fi
+
+# 03. Run preprocessing
+# 03a. Aggregate CellBender- and demuxlet-processed sequencing data
+echo -e "Aggregating datasets...."
+python "${prpr_dir}/01a_cellbender_output_qc__build_anndata.py" --config-yaml-path ${cfg}
+# 03b. Use Scrublet to assign (single-individual) doublet scores to barcodes
+echo -e "Scoring for single-individual doublets...."
+python "${prpr_dir}/01b_cellbender_output_qc__find_si_doublets.py" --config-yaml-path ${cfg}
+
+# Stop here and manually validate Scrublet thresholds following Scrublet documentation, then
+# proceed with scripts
+
+(... more ...)
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   131.54 sec.
+    Max Memory :                                 1383 MB
+    Average Memory :                             278.08 MB
+    Total Requested Memory :                     240000.00 MB
+    Delta Memory :                               238617.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                41
+    Run time :                                   159 sec.
+    Turnaround time :                            160 sec.
+
+The output (if any) follows:
+
+/sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data/configs/config_data_build.yaml
+Config file already contains root directory; proceeding
+Aggregating datasets....
+Integer dtype for processing: uint32
+Float dtype for processing: float32
+
+
+Scoring for single-individual doublets....
+Running scrublet on pool A...
+	Number of multi-individual doublets from demuxlet: 52
+	Number of patients in this pool: 2
+	Estimating the number of single-individual doublets in this multi-individual pool.
+		Estimated number of single-individual doublets per pool: 52.00
+		Estimated number of single-individual doublets per patient: 26.00
+
+		Processing patient 000001 in this pool...
+		Estimated fraction of single-individual doublets for this patient: 0.05
+		Initializing Scrublet object...
+		Performing Scrublet workflow...
+Preprocessing...
+Simulating doublets...
+Embedding transcriptomes using PCA...
+Calculating doublet scores...
+Automatically set threshold at doublet score = 0.24
+Detected doublet rate = 1.0%
+Estimated detectable doublet fraction = 23.5%
+Overall doublet rate:
+	Expected   = 5.0%
+	Estimated  = 4.1%
+Elapsed time: 2.5 seconds
+
+		Processing patient 000002 in this pool...
+		Estimated fraction of single-individual doublets for this patient: 0.04
+		Initializing Scrublet object...
+		Performing Scrublet workflow...
+Preprocessing...
+Simulating doublets...
+Embedding transcriptomes using PCA...
+Calculating doublet scores...
+Automatically set threshold at doublet score = 0.21
+Detected doublet rate = 2.3%
+Estimated detectable doublet fraction = 38.5%
+Overall doublet rate:
+	Expected   = 3.7%
+	Estimated  = 5.9%
+Elapsed time: 0.9 seconds
+
+
+Running scrublet on pool B...
+	Number of multi-individual doublets from demuxlet: 65
+	Number of patients in this pool: 2
+	Estimating the number of single-individual doublets in this multi-individual pool.
+		Estimated number of single-individual doublets per pool: 65.00
+		Estimated number of single-individual doublets per patient: 32.50
+
+		Processing patient 000001 in this pool...
+		Estimated fraction of single-individual doublets for this patient: 0.07
+		Initializing Scrublet object...
+		Performing Scrublet workflow...
+Preprocessing...
+Simulating doublets...
+Embedding transcriptomes using PCA...
+Calculating doublet scores...
+Automatically set threshold at doublet score = 0.30
+Detected doublet rate = 1.1%
+Estimated detectable doublet fraction = 34.1%
+Overall doublet rate:
+	Expected   = 6.8%
+	Estimated  = 3.1%
+Elapsed time: 0.5 seconds
+
+		Processing patient 000002 in this pool...
+		Estimated fraction of single-individual doublets for this patient: 0.04
+		Initializing Scrublet object...
+		Performing Scrublet workflow...
+Preprocessing...
+Simulating doublets...
+Embedding transcriptomes using PCA...
+Calculating doublet scores...
+Automatically set threshold at doublet score = 0.24
+Detected doublet rate = 1.7%
+Estimated detectable doublet fraction = 31.1%
+Overall doublet rate:
+	Expected   = 4.0%
+	Estimated  = 5.5%
+Elapsed time: 1.0 seconds
+
+
+Removing single-individual doublets using manually validated Scrublet thresholds....
+Performing QC and preprocessing....
+Integer dtype for processing: uint32
+Float dtype for processing: float32
+Upper threshold on filtering by mitochondrial read fraction: 90
+hyperparameters:
+MITO_FRAC_UPPER_PCT: 90
+U_GENE_UPPER_PCT: 95
+U_GENE_LOWER_N: 0
+N_MOL_UPPER_PCT: 95
+N_PCS: 25
+LEIDEN_RES: 0.5
+
+Finding top 20000 highly variable genes...
+
+Converting a copy of hvgX matrix to float32...
+Cannot zero-center sparse matrix: converting to dense for scaling.
+Of all 16 clusters, 15 are constituted by patients from >1 pool and are considered potentially valid.
+Ensuring that data is count-like....
+Preprocessing HVG expression data...
+Clipping...
+Shifting...
+Rescaling...
+Performing sanity check...
+Percentile values of adjusted HVG minimum expression values:
+Percentile		Min. Val.
+0		-0.0078125
+10		0.0
+20		0.0
+30		0.0
+40		0.0
+50		0.0
+60		0.0
+70		4.76837158203125e-07
+80		9.5367431640625e-07
+90		3.814697265625e-06
+Clipping count values to a zero minimum...
+Shape check:
+Original data: (2031, 20000)
+Pre-processed data: (2031, 20000)
+Producing figures inspecting cell type marker gene presence vs. number of HVGs retained
+36601
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [69]
+
+
+
+Current gene: MEGF11
+Current gene rank: 69
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [407]
+
+
+
+Current gene: CD44
+Current gene rank: 407
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [34019]
+
+
+
+Current gene: CRP
+Current gene rank: 34019
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [26351]
+
+
+
+Current gene: PPP2R2B
+Current gene rank: 26351
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [22258]
+
+
+
+Current gene: PARP1
+Current gene rank: 22258
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [16852]
+
+
+
+Current gene: FUT4
+Current gene rank: 16852
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [19968]
+
+
+
+Current gene: FUT8
+Current gene rank: 19968
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [10]
+
+
+
+Current gene: IL1B
+Current gene rank: 10
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [121]
+
+
+
+Current gene: IL1RL1
+Current gene rank: 121
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [11404]
+
+
+
+Current gene: IL7R
+Current gene rank: 11404
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [10999]
+
+
+
+Current gene: IL1R2
+Current gene rank: 10999
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [582]
+
+
+
+Current gene: IL6
+Current gene rank: 582
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [268]
+
+
+
+Current gene: IL1A
+Current gene rank: 268
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [30235]
+
+
+
+Current gene: IL2RA
+Current gene rank: 30235
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [562]
+
+
+
+Current gene: TLR2
+Current gene rank: 562
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [3147]
+
+
+
+Current gene: TLR1
+Current gene rank: 3147
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [13664]
+
+
+
+Current gene: TLR4
+Current gene rank: 13664
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [2010]
+
+
+
+Current gene: TLR5
+Current gene rank: 2010
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [3024]
+
+
+
+Current gene: SEMA6B
+Current gene rank: 3024
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [20379]
+
+
+
+Current gene: SEMA3B
+Current gene rank: 20379
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [5592]
+
+
+
+Current gene: SEMA4B
+Current gene rank: 5592
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [9770]
+
+
+
+Current gene: SEMA4A
+Current gene rank: 9770
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [25884]
+
+
+
+Current gene: SEMA4D
+Current gene rank: 25884
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [13697]
+
+
+
+Current gene: SEMA6A
+Current gene rank: 13697
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [12205]
+
+
+
+Current gene: OLIG1
+Current gene rank: 12205
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [3703]
+
+
+
+Current gene: OLIG2
+Current gene rank: 3703
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [220]
+
+
+
+Current gene: SLC6A3
+Current gene rank: 220
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [17035]
+
+
+
+Current gene: TH
+Current gene rank: 17035
+preview of hvg ranked list: ['ADAMTS9', 'LHFPL3', 'FLT1', 'OPCML', 'SGPP2', 'KCNIP4', 'LINC02147', 'SVIL', 'CSMD1', 'PIK3R3']
+current gene rank list: [239]
+
+
+
+Current gene: GFAP
+Current gene rank: 239
+
+
+PS:
+
+Read file </sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data/log_files/run_01_preproces__0.e> for stderr output of this job.
+

@@ -1,0 +1,123 @@
+# config file for dataset build and preprocessing
+
+# random number generator setup
+#
+# scrublet doublet removal random
+# number generator (RNG) seed
+rand_seed_dbl_rm: 10 
+# qc and preprocessing RNG random seed
+rand_seed_qc_preproc: 42 
+# directory with qc and preprocessing RNG state file (relative to root directory)
+rng_state_dir: 'results/random_state_files' 
+# qc and preprocessing RNG state file names
+rng_state_fn__01_preproc: 'numpy_random_state_post_01_preprocess.pkl' 
+
+# sequencing dataset setup
+#
+# de-identified expression data input files
+# directory with CellBender-cleaned datasets (relative to root directory)
+dataset_CB_out_dir: 'data/CellBender_output_files'
+# directory with demuxlet output per dataset
+dataset_demux_out_dir: 'data/demuxlet_singlet_barcode_files'
+# directory with demuxlet singlet/doublet/ambiguous barcode counts per dataset
+dataset_demux_sng_dbl_amb_counts_dir: 'data/demuxlet_sng_dbl_amb_counts_files'
+#
+# directory with mid-preprocessing expression data files (relative to root)
+preprocessed_data_dir: 'results/01r__mid_preprocessing_data_dir'
+# directory with preprocessed expression data file (relative to root)
+post_qc_preproc_data_dir: 'results/01r__preprocessed_non_ct_expr_dat' 
+
+# preprocessing expression data
+#
+# file names
+## initial aggregation, QC, and preprocessing
+aggregated_raw_expr_data_fn: 'sample_human_SN__raw_pre_QC__for_doublet_detection.h5ad' 
+dbl_scored_agg_raw_expr_data_fn: 'sample_human_SN__raw_pre_QC__doublet_scored.h5ad' 
+dbl_rm_agg_raw_expr_data_fn: 'sample_human_SN__raw_pre_QC__doublet_removed.h5ad' 
+preproc_exp_data_no_batch_corr_raw_fn: 'sample_human_SN__QC_filtering_no_batch_corr_hvg_scaled.h5ad'
+preproc_exp_data_batch_corr_scaled_fn: 'sample_human_SN__QC_filtering_batch_corr_hvg.h5ad' 
+preproc_exp_data_filt_pf_only_fn: 'sample_human_SN__pass_fail_QC_filtering_only_for_checks.h5ad'  
+# post-QC and -preprocessing
+post_qc_preproc_data_fn: 'sample_human_SN__fully_QCed.h5ad' 
+
+# data aggregation parameters
+# 
+# remapping to make demuxlet
+# pooled library names
+# consistent with other data
+# if needed (set to {} if not)
+sample_pool_demux_rename_map:
+        HIV: 'HIV-'
+
+# scrublet file locations
+#
+# directory root name for Scrublet output info (relative to 'preprocessed_data_dir')
+# note: the random seed used will be appended to the end of the name
+scrublet_results_dir: 'scrublet_doublet_detection_scores__w_ind_rand_seed_'
+# directory with manually validated doublet threshold file (relative to root)
+validated_doublet_threshold_dir: 'data/scrublet_files'
+
+# scrublet file names
+#
+# file with Scrublet-estimated thresholds on doublet scores
+# to use for removing suspected single-individual doublets
+# note: these doublet thresholds need to be manually validated
+# using doublet score histograms per donor per pool
+# (see Scrublet documentation)
+doublet_threshold_fn: 'per_sample_doublet_thresholds.csv' 
+# manually validated doublet threshold file name
+validated_doublet_threshold_fn: 'per_sample_doublet_thresholds_validated__AW_2025_03_26.csv' 
+# file with information about the
+# number of suspected single-individual
+# doublets removed from data with Scrublet
+removed_doublet_fn: 'removed_doublet_info.csv'
+# publication run version of file
+# described above (with information
+# about Scrublet-removed barcodes
+publication_run_removed_doublet_fn: 'removed_doublet_info__AW_2023_04_25.csv'
+
+# scrublet parameters
+#
+doublet_simulation_rate: 2.5 
+
+# cell type marker gene database
+# file information; this data
+# is used to determine a good number
+# of HVGs to retain for cell typing
+# and subsequent analysis
+#
+# marker gene database directory (relative to root)
+mg_db_dir: 'data/marker_gene_database'
+# marker gene database file
+mg_db_fn: 'marker_gene_db__AW_2022_11_03.csv'
+
+# dataset preprocessing and quality
+# control (QC) parameters
+#
+# whether to run in 'pass/fail only'
+# mode (to assign all barcodes a QC
+# filtering pass or fail score and
+# then quit)
+pass_fail_only: False
+# whether to filter on mitochondrial
+# read fraction
+mito_filtering: True 
+# batch variable for Harmony
+# batch correction
+harmony_batch_corr_var: 'pool_name' 
+# any low-yield donors to remove
+# from downstream analysis
+patients_to_remove: []
+# QC hyperparameter dictionary
+qc_hyperparams: 
+        n_hvgs: 20000
+        hvg_expression_scale_cap_val: 'None'
+        mito_frac_upper_pct: 90
+        u_gene_upper_pct: 95
+        u_gene_lower_pct: 0
+        n_mol_upper_pct: 95
+        n_pcs: 25
+        leiden_res: 0.5
+        n_neighbors: 20
+
+root_dir: '/sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data'
