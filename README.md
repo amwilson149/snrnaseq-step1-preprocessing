@@ -22,7 +22,7 @@ conda activate snrnaseq-preprocess-env
               
 
 The scripts in this repository can then be run in the command line or with a run script. An example run script and configuration file are provided; they work with input data that can
-be found [here](). To use the run script once input data is present, do  
+be found [here](https://doi.org/10.5281/zenodo.15109541). To use the run script once input data is present, do  
 ```
 # make script executable
 chmod +x run_preprocess.sh
