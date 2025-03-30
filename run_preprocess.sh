@@ -1,24 +1,9 @@
 #!/bin/bash
 #BSUB -P acc_motor # project name
-#BSUB -q premium # queue name ('premium' is standard on Minerva)
-#BSUB -n 10 # number of tasks in a parallel job (also submits as a parallel job)
-#BSUB -R span[hosts=1] # resource requirements
-#BSUB -R rusage[mem=24000] # resource requirements
-#BSUB -W 60:00 # job runtime limit (HH:MM)
-#BSUB -J /sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data/log_files/run_01_preproces__0
-#BSUB -o /sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data/log_files/run_01_preproces__0.o
-#BSUB -e /sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data/log_files/run_01_preproces__0.e
-#BSUB -L /bin/bash
 
 set -ev
 
 # 01. Set up environment
-# 01a. Activate conda environment
-ml anaconda3/2020.11
-ml -python
-source /hpc/packages/minerva-centos7/anaconda3/2020.11/etc/profile.d/conda.sh
-conda activate cellbender-w-scrublet-env
-# 01b. Get root directory
 exec_dir=$( pwd )
 cd "${exec_dir}"
 prpr_dir="${exec_dir}/scripts"
