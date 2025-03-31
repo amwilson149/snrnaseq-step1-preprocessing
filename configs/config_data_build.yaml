@@ -120,4 +120,3 @@ qc_hyperparams:
         leiden_res: 0.5
         n_neighbors: 20
 
-root_dir: '/sc/arion/projects/motor/WILSOA28/demuxlet_analysis/snrnaseq__01_build_and_preprocess_data'
