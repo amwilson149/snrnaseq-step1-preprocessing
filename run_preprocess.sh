@@ -1,5 +1,4 @@
 #!/bin/bash
-#BSUB -P acc_motor # project name
 
 set -ev
 
