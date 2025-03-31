@@ -7,15 +7,7 @@ It is intended to be used on snRNA-seq data that has been aligned (and filtered/
 ## Installation
 This code has several dependencies; an environment with them can be built using conda (the code below was run with Anaconda 2020.11):
 ```
-conda config --add channels conda-forge
-conda config --add channels bioconda
-conda config --add channels defaults
-# build conda environment
-conda create -n snrnaseq-preprocess-env python=3.8 anndata=0.8.0 \
-    docutils ipython_genutils jsonschema=4.4.0 keyutils \
-    matplotlib=3.7.2 numpy=1.24.4 pandas=1.4.3 python-fastjsonschema \
-    pyyaml scanpy=1.9.3 scipy=1.10.1 seaborn=0.11.2 seaborn-base=0.11.2 \
-    yaml scikit-misc
+conda env create -f environment.yml
 # activate conda environment
 conda activate snrnaseq-preprocess-env
 ```  
