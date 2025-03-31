@@ -1,4 +1,4 @@
-name: cellbender-w-scrublet-env
+name: snrnaseq-preprocess-env
 channels:
   - conda-forge
   - bioconda
